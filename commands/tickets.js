@@ -6,7 +6,7 @@ module.exports = {
     
     async execute(message, args) {
         const command = args[0];
-        
+
         if (command === 'open') {
             // Vérification si un ticket existe déjà pour cet utilisateur
             const existingChannel = message.guild.channels.cache.find(
@@ -56,3 +56,4 @@ module.exports = {
         }
     }
 };
+

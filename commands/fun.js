@@ -1,5 +1,3 @@
-// fun.js
-
 const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 
@@ -10,27 +8,37 @@ module.exports = {
 
     // Commande !meme - Affiche un mème aléatoire
     async meme(message) {
-        const response = await fetch('https://meme-api.com/memes/random');
-        const data = await response.json();
-        if (data && data.url) {
-            const embed = new MessageEmbed()
-                .setTitle(data.title || 'Meme')
-                .setImage(data.url)
-                .setFooter('Voici un mème pour toi!');
-            message.channel.send({ embeds: [embed] });
-        } else {
-            message.reply("Je n'ai pas pu trouver de mème, réessaye plus tard.");
+        try {
+            const response = await fetch('https://meme-api.com/memes/random');
+            const data = await response.json();
+            if (data && data.url) {
+                const embed = new MessageEmbed()
+                    .setTitle(data.title || 'Meme')
+                    .setImage(data.url)
+                    .setFooter('Voici un mème pour toi!');
+                message.channel.send({ embeds: [embed] });
+            } else {
+                message.reply("Je n'ai pas pu trouver de mème, réessaye plus tard.");
+            }
+        } catch (error) {
+            console.error(error);
+            message.reply("Une erreur s'est produite en récupérant un mème.");
         }
     },
 
     // Commande !joke - Raconte une blague
     async joke(message) {
-        const response = await fetch('https://official-joke-api.appspot.com/jokes/random');
-        const data = await response.json();
-        if (data && data.setup && data.punchline) {
-            message.channel.send(`${data.setup}\n\n${data.punchline}`);
-        } else {
-            message.reply("Je n'ai pas trouvé de blague, réessaie plus tard.");
+        try {
+            const response = await fetch('https://official-joke-api.appspot.com/jokes/random');
+            const data = await response.json();
+            if (data && data.setup && data.punchline) {
+                message.channel.send(`${data.setup}\n\n${data.punchline}`);
+            } else {
+                message.reply("Je n'ai pas trouvé de blague, réessaie plus tard.");
+            }
+        } catch (error) {
+            console.error(error);
+            message.reply("Une erreur s'est produite en récupérant une blague.");
         }
     },
 
@@ -50,29 +58,40 @@ module.exports = {
 
     // Commande !cat - Affiche une image de chat aléatoire
     async cat(message) {
-        const response = await fetch('https://api.thecatapi.com/v1/images/search');
-        const data = await response.json();
-        if (data && data[0] && data[0].url) {
-            const embed = new MessageEmbed()
-                .setTitle("Voici un chat 🐱")
-                .setImage(data[0].url);
-            message.channel.send({ embeds: [embed] });
-        } else {
-            message.reply("Je n'ai pas trouvé d'image de chat, réessaie plus tard.");
+        try {
+            const response = await fetch('https://api.thecatapi.com/v1/images/search');
+            const data = await response.json();
+            if (data && data[0] && data[0].url) {
+                const embed = new MessageEmbed()
+                    .setTitle("Voici un chat 🐱")
+                    .setImage(data[0].url);
+                message.channel.send({ embeds: [embed] });
+            } else {
+                message.reply("Je n'ai pas trouvé d'image de chat, réessaie plus tard.");
+            }
+        } catch (error) {
+            console.error(error);
+            message.reply("Une erreur s'est produite en récupérant une image de chat.");
         }
     },
 
     // Commande !dog - Affiche une image de chien aléatoire
     async dog(message) {
-        const response = await fetch('https://dog.ceo/api/breeds/image/random');
-        const data = await response.json();
-        if (data && data.message) {
-            const embed = new MessageEmbed()
-                .setTitle("Voici un chien 🐶")
-                .setImage(data.message);
-            message.channel.send({ embeds: [embed] });
-        } else {
-            message.reply("Je n'ai pas trouvé d'image de chien, réessaie plus tard.");
+        try {
+            const response = await fetch('https://dog.ceo/api/breeds/image/random');
+            const data = await response.json();
+            if (data && data.message) {
+                const embed = new MessageEmbed()
+                    .setTitle("Voici un chien 🐶")
+                    .setImage(data.message);
+                message.channel.send({ embeds: [embed] });
+            } else {
+                message.reply("Je n'ai pas trouvé d'image de chien, réessaie plus tard.");
+            }
+        } catch (error) {
+            console.error(error);
+            message.reply("Une erreur s'est produite en récupérant une image de chien.");
         }
     }
 };
+

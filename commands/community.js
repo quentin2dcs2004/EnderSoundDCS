@@ -1,5 +1,3 @@
-// community.js
-
 const { MessageEmbed } = require('discord.js');
 const db = require('quick.db');
 
@@ -8,7 +6,7 @@ module.exports = {
     description: 'Community commands for welcome messages, goodbyes, and suggestions',
     commands: ['welcome', 'goodbye', 'suggest'],
 
-    // Commande !welcome <message> - Configurer un message de bienvenue
+    // Exécution des commandes de la communauté
     execute(message, args) {
         if (!message.content.startsWith('!')) return; // Vérifie que la commande commence par le préfixe
         
@@ -40,7 +38,8 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Nouvelle suggestion")
                 .setDescription(suggestion)
-                .setFooter(`Proposée par ${message.author.username}`);
+                .setFooter(`Proposée par ${message.author.username}`)
+                .setColor("#0099ff");
 
             const suggestionsChannel = message.guild.channels.cache.find(channel => channel.name === 'suggestions');
             if (suggestionsChannel) {
@@ -58,7 +57,12 @@ module.exports.onMemberAdd = (member) => {
     const welcomeMessage = db.get(`welcome_${member.guild.id}`);
     const welcomeChannel = member.guild.systemChannel; // Canal par défaut pour les messages système
     if (welcomeMessage && welcomeChannel) {
-        welcomeChannel.send(welcomeMessage.replace('{user}', member.user).replace('{server}', member.guild.name).replace('{channel}', '<#' + welcomeChannel.id + '>'));
+        welcomeChannel.send(
+            welcomeMessage
+                .replace('{user}', `<@${member.id}>`) // Mentionne l'utilisateur qui rejoint
+                .replace('{server}', member.guild.name)
+                .replace('{channel}', `<#${welcomeChannel.id}>`)
+        );
     }
 };
 
@@ -66,6 +70,11 @@ module.exports.onMemberRemove = (member) => {
     const goodbyeMessage = db.get(`goodbye_${member.guild.id}`);
     const goodbyeChannel = member.guild.systemChannel; // Canal par défaut pour les messages système
     if (goodbyeMessage && goodbyeChannel) {
-        goodbyeChannel.send(goodbyeMessage.replace('{user}', member.user).replace('{server}', member.guild.name));
+        goodbyeChannel.send(
+            goodbyeMessage
+                .replace('{user}', member.user.tag) // Affiche le nom de l'utilisateur qui part
+                .replace('{server}', member.guild.name)
+        );
     }
 };
+

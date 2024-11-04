@@ -6,7 +6,7 @@ module.exports = {
 
     async execute(message, args) {
         // Vérification de l'argument de commande
-        if (!args[0] || !args[1]) {
+        if (args.length < 2) {
             return message.reply('Utilisation : `!translate <langue cible> <texte>`.\nExemple : `!translate en Bonjour tout le monde`');
         }
 
@@ -26,3 +26,4 @@ module.exports = {
         }
     }
 };
+

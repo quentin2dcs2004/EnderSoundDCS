@@ -13,16 +13,19 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+// Fonction pour vérifier les permissions de l'utilisateur
 function checkPermissions(member) {
     return member.permissions.has('MANAGE_MESSAGES'); // Modifier selon le rôle requis
 }
 
+// Écoute des messages
 client.on('messageCreate', async (message) => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
+    // Commande !ban
     if (command === 'ban') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de bannir des membres.");
         const user = message.mentions.users.first();
@@ -38,7 +41,9 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois mentionner un utilisateur à bannir.");
         }
-    } else if (command === 'kick') {
+    } 
+    // Commande !kick
+    else if (command === 'kick') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission d'expulser des membres.");
         const user = message.mentions.users.first();
         const reason = args.slice(1).join(' ') || 'Aucune raison fournie';
@@ -53,7 +58,9 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois mentionner un utilisateur à expulser.");
         }
-    } else if (command === 'mute') {
+    } 
+    // Commande !mute
+    else if (command === 'mute') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de rendre muet des membres.");
         const user = message.mentions.users.first();
         const duration = args[1] ? parseInt(args[1]) : 0; // Durée en minutes
@@ -72,7 +79,9 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois mentionner un utilisateur et une durée valide.");
         }
-    } else if (command === 'unmute') {
+    } 
+    // Commande !unmute
+    else if (command === 'unmute') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de rétablir les droits de parole.");
         const user = message.mentions.users.first();
         if (user) {
@@ -86,7 +95,9 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois mentionner un utilisateur à rétablir.");
         }
-    } else if (command === 'warn') {
+    } 
+    // Commande !warn
+    else if (command === 'warn') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission d'avertir des membres.");
         const user = message.mentions.users.first();
         const reason = args.slice(1).join(' ') || 'Aucune raison fournie';
@@ -96,7 +107,9 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois mentionner un utilisateur à avertir.");
         }
-    } else if (command === 'clear') {
+    } 
+    // Commande !clear
+    else if (command === 'clear') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de supprimer des messages.");
         const number = parseInt(args[0]);
         if (!isNaN(number) && number > 0 && number <= 100) {
@@ -107,15 +120,21 @@ client.on('messageCreate', async (message) => {
         } else {
             message.reply("Tu dois spécifier un nombre valide de messages à supprimer (1-100).");
         }
-    } else if (command === 'lock') {
+    } 
+    // Commande !lock
+    else if (command === 'lock') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de verrouiller des canaux.");
         await message.channel.permissionOverwrites.edit(message.guild.roles.everyone, { SEND_MESSAGES: false });
         message.channel.send(`Le canal ${message.channel.name} est maintenant verrouillé.`);
-    } else if (command === 'unlock') {
+    } 
+    // Commande !unlock
+    else if (command === 'unlock') {
         if (!checkPermissions(message.member)) return message.reply("Tu n'as pas la permission de déverrouiller des canaux.");
         await message.channel.permissionOverwrites.edit(message.guild.roles.everyone, { SEND_MESSAGES: true });
         message.channel.send(`Le canal ${message.channel.name} est maintenant déverrouillé.`);
-    } else if (command === 'règlement') {
+    } 
+    // Commande !règlement
+    else if (command === 'règlement') {
         if (args[0] === 'créer') {
             message.channel.send("Règlement créé, vous pouvez maintenant ajouter des règles.");
         } else if (args[0] === 'ajouter') {
@@ -133,4 +152,5 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+
+

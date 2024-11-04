@@ -39,10 +39,12 @@ module.exports = {
             const userEmbed = new MessageEmbed()
                 .setTitle(`Informations sur ${user.username}`)
                 .setThumbnail(user.displayAvatarURL())
-                .addField('ID', user.id)
-                .addField('Tag', user.tag)
-                .addField('Créé le', user.createdAt.toDateString())
-                .addField('Rejoint le serveur le', member.joinedAt.toDateString())
+                .addFields(
+                    { name: 'ID', value: user.id },
+                    { name: 'Tag', value: user.tag },
+                    { name: 'Créé le', value: user.createdAt.toDateString() },
+                    { name: 'Rejoint le serveur le', value: member.joinedAt.toDateString() }
+                )
                 .setColor('#3498DB');
             return message.channel.send({ embeds: [userEmbed] });
         }
@@ -52,10 +54,12 @@ module.exports = {
             const serverEmbed = new MessageEmbed()
                 .setTitle(`Informations sur ${guild.name}`)
                 .setThumbnail(guild.iconURL())
-                .addField('Nom du serveur', guild.name)
-                .addField('Membres', `${guild.memberCount}`)
-                .addField('Créé le', guild.createdAt.toDateString())
-                .addField('Propriétaire', `<@${guild.ownerId}>`)
+                .addFields(
+                    { name: 'Nom du serveur', value: guild.name },
+                    { name: 'Membres', value: `${guild.memberCount}` },
+                    { name: 'Créé le', value: guild.createdAt.toDateString() },
+                    { name: 'Propriétaire', value: `<@${guild.ownerId}>` }
+                )
                 .setColor('#E67E22');
             return message.channel.send({ embeds: [serverEmbed] });
         }
@@ -96,3 +100,4 @@ module.exports = {
         }
     }
 };
+

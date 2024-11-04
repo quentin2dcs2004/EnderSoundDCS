@@ -57,6 +57,13 @@ client.on('messageCreate', async (message) => {
                     adapterCreator: message.guild.voiceAdapterCreator,
                 });
 
+                connection.on(VoiceConnectionStatus.Disconnected, (oldState, newState) => {
+                    if (newState.status === VoiceConnectionStatus.Destroyed) {
+                        console.log('Déconnexion du canal vocal');
+                        queue.delete(message.guild.id);
+                    }
+                });
+
                 queueConstruct.connection = connection;
                 play(message.guild, queueConstruct.songs[0]);
 
@@ -126,6 +133,8 @@ client.on('messageCreate', async (message) => {
 
         serverQueue.volume = volume;
         return message.channel.send(`Volume réglé à : **${volume}**`);
+    } else {
+        return message.reply("Commande non reconnue. Utilisez !play, !pause, !resume, !skip, !stop, !queue, !np, ou !volume.");
     }
 });
 
@@ -139,10 +148,9 @@ function play(guild, song) {
     }
 
     const stream = ytdl(song.url, { filter: 'audioonly' });
-    serverQueue.connection.subscribe(createAudioPlayer());
-    const resource = createAudioResource(stream);
-    
     const player = createAudioPlayer();
+    const resource = createAudioResource(stream);
+
     player.play(resource);
 
     player.on(AudioPlayerStatus.Idle, () => {
@@ -155,4 +163,5 @@ function play(guild, song) {
     serverQueue.connection.subscribe(player);
 }
 
-client.login(process.env.DISCORD_TOKEN);
+
+

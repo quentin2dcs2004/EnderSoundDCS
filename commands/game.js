@@ -2,8 +2,8 @@ const { Client, GatewayIntentBits } = require('discord.js'); // Remplacez Intent
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds, // Utilisez GatewayIntentBits à la place
-        GatewayIntentBits.GuildMessages
-    ]
+        GatewayIntentBits.GuildMessages,
+    ],
 });
 
 const prefix = '!'; // Préfixe des commandes
@@ -34,7 +34,7 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`Le résultat du lancer de pièce est : **${flipResult}**`);
     }
 
-    // Commande !rps
+    // Commande !rps (pierre-feuille-ciseaux)
     else if (command === 'rps') {
         const choices = ['pierre', 'feuille', 'ciseaux'];
         const userChoice = args[0].toLowerCase();
@@ -42,7 +42,7 @@ client.on('messageCreate', async (message) => {
         
         const botChoice = choices[Math.floor(Math.random() * choices.length)];
         let result;
-        
+
         if (userChoice === botChoice) {
             result = 'Égalité !';
         } else if (
@@ -61,16 +61,16 @@ client.on('messageCreate', async (message) => {
     // Commande !trivia
     else if (command === 'trivia') {
         const questions = [
-            { question: "Quel est le plus grand océan du monde?", answer: "Pacifique" },
-            { question: "Qui a écrit 'Les Misérables'?", answer: "Victor Hugo" },
-            { question: "Quelle est la capitale de l'Australie?", answer: "Canberra" },
-            { question: "Quel est l'élément chimique dont le symbole est O?", answer: "Oxygène" },
+            { question: "Quel est le plus grand océan du monde ?", answer: "Pacifique" },
+            { question: "Qui a écrit 'Les Misérables' ?", answer: "Victor Hugo" },
+            { question: "Quelle est la capitale de l'Australie ?", answer: "Canberra" },
+            { question: "Quel est l'élément chimique dont le symbole est O ?", answer: "Oxygène" },
         ];
         
         const trivia = questions[Math.floor(Math.random() * questions.length)];
         message.channel.send(trivia.question);
 
-        // Enregistrement de la réponse (pour simplifier, on attend une réponse immédiate)
+        // Enregistrement de la réponse
         const filter = response => response.content.toLowerCase() === trivia.answer.toLowerCase() && response.author.id === message.author.id;
         const collector = message.channel.createMessageCollector({ filter, time: 15000 });
 
@@ -96,4 +96,5 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+
+

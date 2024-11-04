@@ -1,37 +1,43 @@
-const { Client, GatewayIntentBits, Collection } = require('discord.js'); // Changement ici
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
+require('dotenv').config(); // Charger les variables d'environnement depuis le fichier .env
+
+// Création de l'instance client avec les intentions nécessaires
 const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds, // Utilisez GatewayIntentBits au lieu d'Intents.FLAGS
-        GatewayIntentBits.GuildMessages
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent // Ajout pour écouter le contenu des messages
     ]
 });
 
 const prefix = '!'; // Définition du préfixe pour les commandes
 const economy = new Collection(); // Collection pour stocker le solde des utilisateurs et leur inventaire
+
+// Articles du magasin
 const shopItems = [
     { name: 'épée', price: 100 },
     { name: 'bouclier', price: 150 },
     { name: 'potion', price: 50 },
 ];
 
+// Fonction pour obtenir ou initialiser le profil économique d'un utilisateur
+const getUserProfile = (user) => {
+    if (!economy.has(user.id)) {
+        economy.set(user.id, { balance: 0, inventory: [] });
+    }
+    return economy.get(user.id);
+};
+
 client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`); // Log lorsque le bot est prêt
+    console.log(`Bot connecté en tant que ${client.user.tag}!`);
 });
 
 // Gestion des messages
 client.on('messageCreate', (message) => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return; // Ignore les messages qui ne commencent pas par le préfixe ou ceux des bots
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase(); // Récupération de la commande
-
-    // Fonction pour obtenir ou initialiser le profil économique d'un utilisateur
-    const getUserProfile = (user) => {
-        if (!economy.has(user.id)) {
-            economy.set(user.id, { balance: 0, inventory: [] }); // Initialisation du profil si inexistant
-        }
-        return economy.get(user.id);
-    };
+    const command = args.shift().toLowerCase();
 
     // Commande !balance
     if (command === 'balance') {
@@ -42,7 +48,7 @@ client.on('messageCreate', (message) => {
     // Commande !daily
     else if (command === 'daily') {
         const profile = getUserProfile(message.author);
-        profile.balance += 50; // Récompense quotidienne
+        profile.balance += 50;
         return message.channel.send(`${message.author.username}, vous avez collecté votre récompense quotidienne de **50 pièces** !`);
     }
 
@@ -100,11 +106,12 @@ client.on('messageCreate', (message) => {
 
     // Commande !work
     else if (command === 'work') {
-        const earnings = Math.floor(Math.random() * 100) + 1; // Gain aléatoire entre 1 et 100
+        const earnings = Math.floor(Math.random() * 100) + 1;
         const profile = getUserProfile(message.author);
         profile.balance += earnings;
         return message.channel.send(`${message.author.username}, vous avez travaillé et gagné **${earnings}** pièces !`);
     }
 });
 
-client.login(process.env.DISCORD_TOKEN); // Connexion du bot
+
+
